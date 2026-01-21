@@ -170,6 +170,20 @@
                 return () => window.removeEventListener('scroll', handleScroll);
             }, []);
 
+            // Load Calendly script
+            useEffect(() => {
+                const head = document.querySelector('head');
+                const script = document.createElement('script');
+                script.setAttribute('src', 'https://assets.calendly.com/assets/external/widget.js');
+                script.setAttribute('async', 'true');
+                head.appendChild(script);
+                
+                return () => {
+                    // Optional: remove script on unmount if needed, though usually fine to keep for single page
+                    // head.removeChild(script); 
+                };
+            }, []);
+
             const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
             const scrollToSection = (id) => {
@@ -452,23 +466,22 @@
                 {/* Calendly Booking Section */}
                 <section id="contact" className="py-20 bg-slate-900 text-white relative">
                     <div className="container mx-auto px-4 relative z-10">
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-3xl p-8 md:p-16 shadow-2xl text-center max-w-4xl mx-auto">
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-3xl p-4 md:p-8 shadow-2xl text-center max-w-4xl mx-auto">
                         <Calendar size={48} className="mx-auto mb-6 text-blue-200" />
                         <h2 className="text-3xl md:text-4xl font-bold mb-6">Schedule a Consultation</h2>
                         <p className="text-lg text-blue-100 mb-10 max-w-2xl mx-auto">
-                        Ready to discuss your staffing needs or your next career move? Book a 15-minute introductory call with our team directly.
+                        Ready to discuss your staffing needs or your next career move? Use the calendar below to book a time directly.
                         </p>
-                        <a 
-                        href="https://calendly.com" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 hover:scale-105 transition-all shadow-lg"
-                        >
-                        Open Booking Calendar <ChevronRight size={20} />
-                        </a>
-                        <p className="mt-6 text-sm text-blue-200 opacity-75">
-                        *Opens in a new window via Calendly
-                        </p>
+                        
+                        {/* Calendly Inline Widget */}
+                        <div className="bg-white rounded-xl overflow-hidden">
+                            <div 
+                                className="calendly-inline-widget" 
+                                data-url="https://calendly.com/contact-aahcss/30min?hide_event_type_details=1&hide_gdpr_banner=1" 
+                                style={{ minWidth: '320px', height: '700px' }} 
+                            ></div>
+                        </div>
+
                     </div>
 
                     {/* Additional Contact Info */}
