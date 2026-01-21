@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A & A 24/7 Health Care Staffing Services LLC</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-down': 'fadeInDown 0.3s ease-out',
+                        'bounce-slow': 'bounce 3s infinite',
+                    },
+                    keyframes: {
+                        fadeInDown: {
+                            '0%': { opacity: '0', transform: 'translateY(-10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Import Inter font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- Icon Components (Replacing lucide-react imports) ---
+        const IconWrapper = ({ children, size = 24, className = "", ...props }) => (
+            <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width={size} 
+                height={size} 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className={className} 
+                {...props}
+            >
+                {children}
+            </svg>
+        );
+
+        const Menu = (props) => (
+            <IconWrapper {...props}>
+                <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
+            </IconWrapper>
+        );
+
+        const X = (props) => (
+            <IconWrapper {...props}>
+                <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+            </IconWrapper>
+        );
+
+        const HeartPulse = (props) => (
+            <IconWrapper {...props}>
+                <path d="M19 14c1.49-1.28 3.6-1.28 5.1 0 1.26 1.08 1.26 2.83 0 3.91l-1.41 1.53c-1.87 2.05-4.8 2.05-6.66 0l-1.42-1.53"/><path d="M2 12h2l2 4 4-8 4 8 2-4h2"/>
+            </IconWrapper>
+        );
+
+        const Stethoscope = (props) => (
+            <IconWrapper {...props}>
+                <path d="M4.8 2.3A.3.3 0 0 1 5 2h12a.3.3 0 0 1 .2.3v3.5a3 3 0 0 1-6 0v-4"/><path d="m11.2 5.1.2 11.8c.2 1.6 1.7 2.9 3.5 2.9 1.9 0 3.3-1.4 3.3-3.2V5.1"/><path d="m11.2 5.1-4 3.7c-2 1.8-1.5 5 1.1 5.4 2.6.4 4.8-1.7 4.8-4.3"/>
+            </IconWrapper>
+        );
+
+        const MapPin = (props) => (
+            <IconWrapper {...props}>
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+            </IconWrapper>
+        );
+
+        const Clock = (props) => (
+            <IconWrapper {...props}>
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </IconWrapper>
+        );
+
+        const Phone = (props) => (
+            <IconWrapper {...props}>
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </IconWrapper>
+        );
+
+        const Mail = (props) => (
+            <IconWrapper {...props}>
+                <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </IconWrapper>
+        );
+
+        const Users = (props) => (
+            <IconWrapper {...props}>
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </IconWrapper>
+        );
+
+        const Briefcase = (props) => (
+            <IconWrapper {...props}>
+                <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </IconWrapper>
+        );
+
+        const Calendar = (props) => (
+            <IconWrapper {...props}>
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>
+            </IconWrapper>
+        );
+
+        const ChevronRight = (props) => (
+            <IconWrapper {...props}>
+                <path d="m9 18 6-6-6-6"/>
+            </IconWrapper>
+        );
+
+        const CheckCircle = (props) => (
+            <IconWrapper {...props}>
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </IconWrapper>
+        );
+
+        const ArrowRight = (props) => (
+            <IconWrapper {...props}>
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </IconWrapper>
+        );
+
+        // --- Main App Component ---
+        const App = () => {
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const [scrolled, setScrolled] = useState(false);
+
+            // Handle scroll effect for navbar
+            useEffect(() => {
+                const handleScroll = () => {
+                setScrolled(window.scrollY > 20);
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+            const scrollToSection = (id) => {
+                setIsMenuOpen(false);
+                const element = document.getElementById(id);
+                if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                }
+            };
+
+            return (
+                <div className="font-sans text-slate-800 bg-slate-50 min-h-screen flex flex-col">
+                
+                {/* Navigation */}
+                <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
+                    <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
+                    {/* Logo Area */}
+                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                        <div className="bg-blue-600 p-2 rounded-lg text-white">
+                        <HeartPulse size={24} />
+                        </div>
+                        <div className="flex flex-col">
+                        <span className={`font-bold text-xl leading-none ${scrolled ? 'text-slate-900' : 'text-slate-900 lg:text-slate-800'}`}>A & A</span>
+                        <span className={`text-xs font-medium tracking-wider ${scrolled ? 'text-slate-500' : 'text-slate-600'}`}>HEALTH CARE STAFFING</span>
+                        </div>
+                    </div>
+
+                    {/* Desktop Menu */}
+                    <div className="hidden md:flex items-center space-x-8">
+                        {['Services', 'About', 'Candidates', 'Facilities'].map((item) => (
+                        <button 
+                            key={item}
+                            onClick={() => scrollToSection(item.toLowerCase())}
+                            className={`text-sm font-medium hover:text-blue-600 transition-colors ${scrolled ? 'text-slate-600' : 'text-slate-700'}`}
+                        >
+                            {item}
+                        </button>
+                        ))}
+                        <button 
+                        onClick={() => scrollToSection('contact')}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-lg shadow-blue-600/20"
+                        >
+                        Book Consultation
+                        </button>
+                    </div>
+
+                    {/* Mobile Menu Button */}
+                    <button className="md:hidden text-slate-700" onClick={toggleMenu}>
+                        {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    </button>
+                    </div>
+
+                    {/* Mobile Menu Overlay */}
+                    {isMenuOpen && (
+                    <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-xl border-t border-slate-100 p-4 flex flex-col space-y-4 animate-fade-in-down">
+                        {['Services', 'About', 'Candidates', 'Facilities', 'Contact'].map((item) => (
+                        <button 
+                            key={item}
+                            onClick={() => scrollToSection(item.toLowerCase())}
+                            className="text-left text-lg font-medium text-slate-700 py-2 border-b border-slate-50"
+                        >
+                            {item}
+                        </button>
+                        ))}
+                    </div>
+                    )}
+                </nav>
+
+                {/* Hero Section */}
+                <header className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+                    {/* Background blobs */}
+                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-50 z-0"></div>
+                    <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-teal-100 rounded-full blur-3xl opacity-50 z-0"></div>
+
+                    <div className="container mx-auto px-4 md:px-6 relative z-10">
+                    <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                        <div className="lg:w-1/2 space-y-6 text-center lg:text-left">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-sm font-medium border border-blue-100 mx-auto lg:mx-0">
+                            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+                            Staffing Nationwide 24/7
+                        </div>
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight">
+                            Healthcare Staffing <br/>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">Done Right.</span>
+                        </h1>
+                        <p className="text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                            Connecting premier healthcare facilities with top-tier professionals across the United States. Fast, reliable, and compliant staffing solutions.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
+                            <button 
+                            onClick={() => scrollToSection('facilities')}
+                            className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-xl shadow-blue-600/20 transition-all flex items-center justify-center gap-2"
+                            >
+                            Find Staff <ArrowRight size={18} />
+                            </button>
+                            <button 
+                            onClick={() => scrollToSection('candidates')}
+                            className="px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold shadow-sm transition-all flex items-center justify-center gap-2"
+                            >
+                            Find a Job
+                            </button>
+                        </div>
+                        </div>
+
+                        {/* Hero Image Placeholder */}
+                        <div className="lg:w-1/2 w-full relative">
+                        <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-slate-200 aspect-[4/3] group">
+                            {/* Simulated Image */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-slate-300 to-slate-100 flex items-center justify-center text-slate-400">
+                            <div className="text-center">
+                                <Users size={64} className="mx-auto mb-4 opacity-50" />
+                                <span className="text-sm font-medium uppercase tracking-widest">Team Interaction Image</span>
+                            </div>
+                            </div>
+                            
+                            {/* Floating Card 1 */}
+                            <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg max-w-xs animate-bounce-slow">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-green-100 p-2 rounded-full text-green-600">
+                                <CheckCircle size={20} />
+                                </div>
+                                <div>
+                                <p className="text-sm font-bold text-slate-900">Verified Professionals</p>
+                                <p className="text-xs text-slate-500">100% Credentialed</p>
+                                </div>
+                            </div>
+                            </div>
+
+                            {/* Floating Card 2 */}
+                            <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg animate-bounce-slow" style={{ animationDelay: '1s' }}>
+                            <div className="flex items-center gap-3">
+                                <div className="bg-blue-100 p-2 rounded-full text-blue-600">
+                                <MapPin size={20} />
+                                </div>
+                                <div>
+                                <p className="text-sm font-bold text-slate-900">Nationwide Coverage</p>
+                                <p className="text-xs text-slate-500">Serving all 50 States</p>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </header>
+
+                {/* Stats Section */}
+                <section className="bg-blue-900 text-white py-12">
+                    <div className="container mx-auto px-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                        {[
+                        { label: "States Covered", value: "50+" },
+                        { label: "Active Staff", value: "1,200+" },
+                        { label: "Facilities Served", value: "300+" },
+                        { label: "Support", value: "24/7" },
+                        ].map((stat, idx) => (
+                        <div key={idx} className="space-y-1">
+                            <div className="text-3xl md:text-4xl font-bold text-teal-400">{stat.value}</div>
+                            <div className="text-sm md:text-base text-blue-200">{stat.label}</div>
+                        </div>
+                        ))}
+                    </div>
+                    </div>
+                </section>
+
+                {/* About Section */}
+                <section id="about" className="py-20 bg-white">
+                    <div className="container mx-auto px-4 md:px-6">
+                    <div className="flex flex-col lg:flex-row items-center gap-16">
+                        <div className="lg:w-1/2 order-2 lg:order-1">
+                        <div className="bg-slate-100 rounded-3xl aspect-square relative flex items-center justify-center overflow-hidden">
+                            <Briefcase size={80} className="text-slate-300" />
+                            <span className="absolute bottom-8 text-slate-400 font-medium">Office / Professional Image</span>
+                        </div>
+                        </div>
+                        <div className="lg:w-1/2 order-1 lg:order-2">
+                        <h2 className="text-blue-600 font-semibold tracking-wide uppercase mb-2">Who We Are</h2>
+                        <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Dedicated to Excellence in Healthcare Staffing</h3>
+                        <p className="text-slate-600 leading-relaxed mb-6">
+                            A & A 24/7 Health Care Staffing Services LLC is a premier staffing agency committed to bridging the gap between healthcare facilities and qualified professionals. Whether you need temporary coverage, executive leadership, or permanent placements, our nationwide network ensures you get the best talent, fast.
+                        </p>
+                        <ul className="space-y-4">
+                            {[
+                            "Rapid response staffing for urgent needs",
+                            "Rigorous screening and credentialing process",
+                            "Personalized service for every client and candidate",
+                            "Comprehensive coverage across all specialties"
+                            ].map((item, idx) => (
+                            <li key={idx} className="flex items-start gap-3">
+                                <CheckCircle className="text-teal-500 mt-1 shrink-0" size={20} />
+                                <span className="text-slate-700">{item}</span>
+                            </li>
+                            ))}
+                        </ul>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+
+                {/* Services Section */}
+                <section id="services" className="py-20 bg-slate-50">
+                    <div className="container mx-auto px-4 md:px-6">
+                    <div className="text-center max-w-3xl mx-auto mb-16">
+                        <h2 className="text-blue-600 font-semibold tracking-wide uppercase mb-2">Our Specialties</h2>
+                        <h3 className="text-3xl md:text-4xl font-bold text-slate-900">Comprehensive Staffing Solutions</h3>
+                        <p className="text-slate-600 mt-4">We provide specialized talent for every department in your healthcare facility.</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[
+                        { title: "Registered Nurses (RN)", desc: "ICU, ER, Med-Surg, Telemetry, and specialty units.", icon: <HeartPulse /> },
+                        { title: "LPNs / LVNs", desc: "Reliable care for long-term care facilities and clinics.", icon: <Stethoscope /> },
+                        { title: "Certified Nursing Assistants", desc: "Compassionate support staff for daily patient care.", icon: <Users /> },
+                        { title: "Allied Health", desc: "Radiology, Respiratory Techs, Lab Techs, and more.", icon: <Briefcase /> },
+                        { title: "Healthcare Executives", desc: "Interim leadership, Directors, and C-Suite professionals.", icon: <Briefcase /> },
+                        { title: "Per Diem Staffing", desc: "On-demand shifts to cover last-minute call-offs.", icon: <Clock /> },
+                        ].map((service, idx) => (
+                        <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-slate-100 group">
+                            <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                            {React.cloneElement(service.icon, { size: 28 })}
+                            </div>
+                            <h4 className="text-xl font-bold text-slate-900 mb-3">{service.title}</h4>
+                            <p className="text-slate-600 leading-relaxed">{service.desc}</p>
+                        </div>
+                        ))}
+                    </div>
+                    </div>
+                </section>
+
+                {/* Dual CTA Section */}
+                <section className="py-20">
+                    <div className="container mx-auto px-4 md:px-6">
+                    <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+                        
+                        {/* For Facilities */}
+                        <div id="facilities" className="bg-blue-600 rounded-3xl p-8 lg:p-12 text-white relative overflow-hidden">
+                        <div className="relative z-10">
+                            <span className="inline-block px-3 py-1 bg-blue-500 rounded-full text-sm font-medium mb-4">For Employers</span>
+                            <h3 className="text-3xl font-bold mb-4">Need Staffing?</h3>
+                            <p className="text-blue-100 mb-8 max-w-md">
+                            Stop worrying about coverage gaps. Access our database of pre-screened, ready-to-work professionals today.
+                            </p>
+                            <button 
+                            onClick={() => scrollToSection('contact')}
+                            className="bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-colors inline-flex items-center gap-2"
+                            >
+                            Request Staff <ChevronRight size={18} />
+                            </button>
+                        </div>
+                        <div className="absolute right-0 bottom-0 opacity-10 transform translate-x-10 translate-y-10">
+                            <Briefcase size={200} />
+                        </div>
+                        </div>
+
+                        {/* For Candidates */}
+                        <div id="candidates" className="bg-teal-600 rounded-3xl p-8 lg:p-12 text-white relative overflow-hidden">
+                        <div className="relative z-10">
+                            <span className="inline-block px-3 py-1 bg-teal-500 rounded-full text-sm font-medium mb-4">For Job Seekers</span>
+                            <h3 className="text-3xl font-bold mb-4">Looking for Work?</h3>
+                            <p className="text-teal-100 mb-8 max-w-md">
+                            Join our network to find high-paying local shifts or executive roles that fit your career goals.
+                            </p>
+                            <button 
+                            onClick={() => scrollToSection('contact')}
+                            className="bg-white text-teal-600 px-6 py-3 rounded-xl font-semibold hover:bg-teal-50 transition-colors inline-flex items-center gap-2"
+                            >
+                            Apply Now <ChevronRight size={18} />
+                            </button>
+                        </div>
+                        <div className="absolute right-0 bottom-0 opacity-10 transform translate-x-10 translate-y-10">
+                            <Users size={200} />
+                        </div>
+                        </div>
+
+                    </div>
+                    </div>
+                </section>
+
+                {/* Calendly Booking Section */}
+                <section id="contact" className="py-20 bg-slate-900 text-white relative">
+                    <div className="container mx-auto px-4 relative z-10">
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-3xl p-8 md:p-16 shadow-2xl text-center max-w-4xl mx-auto">
+                        <Calendar size={48} className="mx-auto mb-6 text-blue-200" />
+                        <h2 className="text-3xl md:text-4xl font-bold mb-6">Schedule a Consultation</h2>
+                        <p className="text-lg text-blue-100 mb-10 max-w-2xl mx-auto">
+                        Ready to discuss your staffing needs or your next career move? Book a 15-minute introductory call with our team directly.
+                        </p>
+                        <a 
+                        href="https://calendly.com" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 hover:scale-105 transition-all shadow-lg"
+                        >
+                        Open Booking Calendar <ChevronRight size={20} />
+                        </a>
+                        <p className="mt-6 text-sm text-blue-200 opacity-75">
+                        *Opens in a new window via Calendly
+                        </p>
+                    </div>
+
+                    {/* Additional Contact Info */}
+                    <div className="grid md:grid-cols-2 gap-12 mt-20 max-w-4xl mx-auto">
+                        <div className="flex items-start gap-4">
+                        <div className="bg-slate-800 p-3 rounded-lg text-blue-400">
+                            <Mail size={24} />
+                        </div>
+                        <div>
+                            <h4 className="text-lg font-bold mb-1">Email Us</h4>
+                            <p className="text-slate-400 mb-2">For general inquiries and resume submissions.</p>
+                            <a href="mailto:Contact@aahcss.com" className="text-white hover:text-blue-400 font-medium text-lg">Contact@aahcss.com</a>
+                        </div>
+                        </div>
+
+                        <div className="flex items-start gap-4">
+                        <div className="bg-slate-800 p-3 rounded-lg text-teal-400">
+                            <Phone size={24} />
+                        </div>
+                        <div>
+                            <h4 className="text-lg font-bold mb-1">Call Us</h4>
+                            <p className="text-slate-400 mb-2">Available 24/7 for urgent staffing needs.</p>
+                            <a href="tel:9495764936" className="text-white hover:text-teal-400 font-medium text-lg">(949) 576-4936</a>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+
+                {/* Footer */}
+                <footer className="bg-slate-950 text-slate-400 py-12 border-t border-slate-900">
+                    <div className="container mx-auto px-4">
+                    <div className="grid md:grid-cols-4 gap-8 mb-12">
+                        <div className="col-span-1 md:col-span-2">
+                        <div className="flex items-center gap-2 mb-4 text-white">
+                            <HeartPulse size={24} className="text-blue-500" />
+                            <span className="font-bold text-xl">A & A Staffing</span>
+                        </div>
+                        <p className="max-w-sm mb-6">
+                            A & A 24/7 Health Care Staffing Services LLC provides premier healthcare professionals to facilities across the United States.
+                        </p>
+                        </div>
+                        
+                        <div>
+                        <h4 className="text-white font-bold mb-4">Quick Links</h4>
+                        <ul className="space-y-2">
+                            <li><button onClick={() => scrollToSection('about')} className="hover:text-blue-400 transition-colors">About Us</button></li>
+                            <li><button onClick={() => scrollToSection('services')} className="hover:text-blue-400 transition-colors">Services</button></li>
+                            <li><button onClick={() => scrollToSection('facilities')} className="hover:text-blue-400 transition-colors">For Employers</button></li>
+                            <li><button onClick={() => scrollToSection('candidates')} className="hover:text-blue-400 transition-colors">For Candidates</button></li>
+                        </ul>
+                        </div>
+
+                        <div>
+                        <h4 className="text-white font-bold mb-4">Legal</h4>
+                        <ul className="space-y-2">
+                            <li><span className="cursor-pointer hover:text-blue-400">Privacy Policy</span></li>
+                            <li><span className="cursor-pointer hover:text-blue-400">Terms of Service</span></li>
+                            <li><span className="cursor-pointer hover:text-blue-400">Cookie Policy</span></li>
+                        </ul>
+                        </div>
+                    </div>
+                    
+                    <div className="pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <p className="text-sm">© 2024 A & A 24/7 Health Care Staffing Services LLC. All rights reserved.</p>
+                        <p className="text-sm">Serving the United States Nationwide.</p>
+                    </div>
+                    </div>
+                </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
